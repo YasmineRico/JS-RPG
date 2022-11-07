@@ -111,12 +111,12 @@ function goStore(){
 }
 
 
-// if gold is greater than 
+
 function buyHealth(){
    if(gold >= 10 ){
         gold -= 10;
         health += 10;
-        gold.innerText= gold;
+        goldText.innerText= gold;
         healthText.innerText= health;
    } else{
     text.innerText = "You do not have enough gold to buy health.";
@@ -124,36 +124,38 @@ function buyHealth(){
     
 }
 
-function buyWeapon(){
-    if (currentWeapon < weapons.length - 1){
-        if (gold >= 30){
+function buyWeapon() {
+    if (currentWeapon < weapons.length - 1) {
+    	if (gold >= 30) {
             gold -= 30;
-            currentWeapon ++; //Adds one to the current weapon similar to +1
+            currentWeapon++;
             goldText.innerText = gold;
             let newWeapon = weapons[currentWeapon].name;
-            text.innertext = `You now have a ${newWeapon}. `;
+    		text.innerText = "You now have a " + newWeapon + ".";
             inventory.push(newWeapon);
-            text.innerText += `In your inventory you have ${inventory} .`
-        }else {
-            text.innerText= "You do not have enough gold to buy a weapon."
-        }
-    }else {
-        text.innerText = "You already have the most powerful weapon!";
+            text.innerText += " In your inventory you have: " + inventory;
+    	} else {
+    		text.innerText = "You do not have enough gold to buy a weapon.";
+    	} 
+    } else {
+		text.innerText = "You already have the most powerful weapon!";
         button2.innerText = "Sell weapon for 15 gold";
-        button2.onclick = sellWeapon;
-    }    
+		button2.onclick = sellWeapon;
+	}
 }
 
-function sellWeapon(){
-    if (inventory.length > 1){
-        gold += 15;
-        goldText.innerText = gold;
-        let currentWeapon = inventory.shift();
-        text.innerText = `You sold a ${currentWeapon}.`
-    }else {
-        text.innerText = `Don't sell your only weapon!`
-    }
+function sellWeapon() {
+	if (inventory.length > 1) {
+		gold += 15;
+		goldText.innerText = gold;
+        let currentWeapon = inventory.shift(); //takes out the weapon chose from array
+        text.innerText = "You sold a " + currentWeapon + ".";
+        text.innerText += " In your inventory you have: " + inventory;
+	} else {
+    	text.innerText = "Don't sell your only weapon!";
+  	}
 }
+
 
 // passes in the locations array and gets the code from the 1st element by using the index of 0
 function goTown(){
@@ -192,27 +194,47 @@ function fightDragon(){
     goFight();
 }
 
-function goFight(){
-    update (locations[3])
+function goFight() {
+    update(locations[3]);
     monsterHealth = monsters[fighting].health;
     monsterStats.style.display = "block";
     monsterNameText.innerText = monsters[fighting].name;
-    monsterHealthText = monsterHealth;
+	monsterHealthText.innerText = monsterHealth;
 }
 
-function attack(){
-    text.innerText = `The ${monsters[fighting].name} attacks.`;
-    text.innerText += `You attack it with your ${weapons[currentWeapon.name]}.`;
-    health -= monsters[fighting].level;
-    monsterHealth -= weapons[currentWeapon].power + Math.floor(Math.random()* xp) + 1;;
-    healthText.innerText = health;
-    monsterHealthText.innerText = monsterHealth;
-    if(health <= 0){
-        lose();
-    }else if( monsterHealth <= 0){
-        fighting === 2 ? winGame() : defeatMonster();
+function attack() {
+    text.innerText = "The " + monsters[fighting].name + " attacks.";
+    text.innerText += " You attack it with your " + weapons[currentWeapon].name + ".";
     
-    }
+    if (isMonsterHit()) {
+        health -= getMonsterAttackValue(monsters[fighting].level);
+    } else {
+		text.innerText += " You miss.";
+	}
+    
+    monsterHealth -= weapons[currentWeapon].power + Math.floor(Math.random() * xp) + 1;
+	healthText.innerText = health;
+	monsterHealthText.innerText = monsterHealth;   
+	if (health <= 0) {
+		lose();
+	} else if (monsterHealth <= 0) {
+		fighting === 2 ? winGame() : defeatMonster();
+	}
+
+	if (Math.random() <= .1 && inventory.length !== 1) {
+        text.innerText += " Your " + inventory.pop() + " breaks.";
+        currentWeapon--;
+	}
+}
+
+function getMonsterAttackValue(level) {
+    let hit = (level * 5) - (Math.floor(Math.random() * xp));
+    console.log(hit);
+    return hit;
+}
+
+function isMonsterHit() {
+	return Math.random() > .2 || health < 20;
 }
 
 function dodge(){
