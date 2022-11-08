@@ -1,5 +1,5 @@
 body {
-    background-color: whitesmoke;
+    background-color: papayawhip;
   }
   
   #text {
@@ -11,12 +11,11 @@ body {
   #game {
     max-width: 500px;
     max-height: 400px;
-    background-color: lightgray;
+    background-color: whitesmoke;
     color: white;
     margin: 0 auto;
     padding: 10px;
-    display: flexbox;
-    justify-content: center;
+    border-radius: 12px;
   }
   
   #controls {
@@ -35,9 +34,14 @@ body {
     border: 1px black solid;
     color: white;
     padding: 5px;
-    background-color: green;
+    background-color: black;
   }
   
   .stat {
     padding-right: 10px;
+  }
+
+  #button1, #button2, #button3{
+    background-color: pink;
+    border-radius: 12px;
   }
